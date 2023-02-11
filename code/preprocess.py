@@ -104,4 +104,4 @@ if __name__ == '__main__':
     if use_stemmer:
         porter_stemmer = PorterStemmer()
         processed_file_name = sys.argv[1][:-4] + '-processed-stemmed.csv'
-    preprocess_csv(csv_file_name, processed_file_name, test_file=True)
+    preprocess_csv(csv_file_name, processed_file_name, test_file=False)

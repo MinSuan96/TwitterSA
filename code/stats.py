@@ -56,7 +56,7 @@ if __name__ == '__main__':
     num_bigrams, num_unique_bigrams = 0, 0
     all_words = []
     all_bigrams = []
-    with open(sys.argv[1], 'r') as csv:
+    with open(sys.argv[1], 'r', encoding='utf-8') as csv:
         lines = csv.readlines()
         num_tweets = len(lines)
         for i, line in enumerate(lines):
