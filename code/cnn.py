@@ -12,11 +12,11 @@ from sklearn.metrics import classification_report
 
 # Performs classification using CNN.
 
-FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed.csv'
-TEST_PROCESSED_FILE = '../twitter_data/smallDataset/test-processed.csv'
-TEST_LABEL_FILE = ''
+FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed.csv'
+TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_test_x.csv'
+TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data_test_y.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
 dim = 200
 
@@ -65,7 +65,7 @@ def process_tweets(csv_file, test_file=True):
     tweets = []
     labels = []
     print('Generating feature vectors')
-    with open(csv_file, 'r') as csv:
+    with open(csv_file, 'r', encoding="utf-8") as csv:
         lines = csv.readlines()
         total = len(lines)
         for i, line in enumerate(lines):
@@ -135,4 +135,5 @@ if __name__ == '__main__':
         id_results = zip(map(str, range(len(test_tweets))), results)
         utils.save_results_to_csv(id_results, 'cnn.csv')
         test_label = pd.read_csv(TEST_LABEL_FILE).to_numpy()
+        print("test_label_num:" + str(np.shape(test_label)[0]) + "," + str(np.shape(results)[0]))
         print(classification_report(test_label, results))
