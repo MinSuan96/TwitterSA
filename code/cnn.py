@@ -7,13 +7,16 @@ from keras.layers import Conv1D, GlobalMaxPooling1D
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 import utils
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import pandas as pd
+from sklearn.metrics import classification_report
 
 # Performs classification using CNN.
 
-FREQ_DIST_FILE = '../twitter_data/train-processed-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/train-processed-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/train-processed.csv'
-TEST_PROCESSED_FILE = '../twitter_data/test-processed.csv'
+FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed.csv'
+TEST_PROCESSED_FILE = '../twitter_data/smallDataset/test-processed.csv'
+TEST_LABEL_FILE = ''
 GLOVE_FILE = '../dataset/glove-seeds.txt'
 dim = 200
 
@@ -128,5 +131,8 @@ if __name__ == '__main__':
         test_tweets, _ = process_tweets(TEST_PROCESSED_FILE, test_file=True)
         test_tweets = pad_sequences(test_tweets, maxlen=max_length, padding='post')
         predictions = model.predict(test_tweets, batch_size=128, verbose=1)
-        results = zip(map(str, range(len(test_tweets))), np.round(predictions[:, 0]).astype(int))
-        utils.save_results_to_csv(results, 'cnn.csv')
+        results = np.round(predictions[:, 0]).astype(int)
+        id_results = zip(map(str, range(len(test_tweets))), results)
+        utils.save_results_to_csv(id_results, 'cnn.csv')
+        test_label = pd.read_csv(TEST_LABEL_FILE).to_numpy()
+        print(classification_report(test_label, results))
