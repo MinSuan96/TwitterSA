@@ -6,7 +6,7 @@ from keras.layers import Embedding, Flatten
 from keras.layers import Conv1D, GlobalMaxPooling1D
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 import utils
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Performs classification using CNN.
 
