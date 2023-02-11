@@ -15,9 +15,11 @@ from sklearn.metrics import classification_report
 FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist.pkl'
 BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist-bi.pkl'
 TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed.csv'
-TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_test_x.csv'
-TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data_test_y.csv'
+TEST_PROCESSED_FILE = '../twitter_data/smallDataset/train-processed_x.csv'
+TEST_LABEL_FILE = '../twitter_data/smallDataset/train-processed_y.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
+MODEL_FILE = './models/4cnn-08-0.024-0.087.hdf5'
+train = False
 dim = 200
 
 
@@ -85,7 +87,6 @@ def process_tweets(csv_file, test_file=True):
 
 
 if __name__ == '__main__':
-    train = len(sys.argv) == 1
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 500
@@ -126,7 +127,7 @@ if __name__ == '__main__':
         reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=2, min_lr=0.000001)
         model.fit(tweets, labels, batch_size=128, epochs=8, validation_split=0.1, shuffle=True, callbacks=[checkpoint, reduce_lr])
     else:
-        model = load_model(sys.argv[1])
+        model = load_model(MODEL_FILE)
         print(model.summary())
         test_tweets, _ = process_tweets(TEST_PROCESSED_FILE, test_file=True)
         test_tweets = pad_sequences(test_tweets, maxlen=max_length, padding='post')
