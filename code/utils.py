@@ -11,6 +11,13 @@ def file_to_wordset(filename):
             words.append(line.strip())
     return set(words)
 
+def file_number_to_list(filename):
+    ''' Converts a file with a word per line to a Python list '''
+    words = []
+    with open(filename, 'r') as f:
+        for line in f:
+            words.append(int(line.strip()))
+    return words
 
 def write_status(i, total):
     ''' Writes status of a process to console '''

@@ -134,6 +134,5 @@ if __name__ == '__main__':
         results = np.round(predictions[:, 0]).astype(int)
         id_results = zip(map(str, range(len(test_tweets))), results)
         utils.save_results_to_csv(id_results, 'cnn.csv')
-        test_label = pd.read_csv(TEST_LABEL_FILE).to_numpy()
-        print("test_label_num:" + str(np.shape(test_label)[0]) + "," + str(np.shape(results)[0]))
+        test_label = utils.file_number_to_list(TEST_LABEL_FILE)
         print(classification_report(test_label, results))
