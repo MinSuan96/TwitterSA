@@ -10,11 +10,11 @@ from keras.preprocessing.sequence import pad_sequences
 
 # Performs classification using CNN.
 
-FREQ_DIST_FILE = '../train-processed-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../train-processed-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../train-processed.csv'
-TEST_PROCESSED_FILE = '../test-processed.csv'
-GLOVE_FILE = './dataset/glove-seeds.txt'
+FREQ_DIST_FILE = '../twitter_data/train-processed-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/train-processed-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/train-processed.csv'
+TEST_PROCESSED_FILE = '../twitter_data/test-processed.csv'
+GLOVE_FILE = '../dataset/glove-seeds.txt'
 dim = 200
 
 
@@ -25,7 +25,7 @@ def get_glove_vectors(vocab):
     print('Looking for GLOVE seeds')
     glove_vectors = {}
     found = 0
-    with open(GLOVE_FILE, 'r') as glove_file:
+    with open(GLOVE_FILE, 'r', encoding='utf-8') as glove_file:
         for i, line in enumerate(glove_file):
             utils.write_status(i + 1, 0)
             tokens = line.strip().split()
