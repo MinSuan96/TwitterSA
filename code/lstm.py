@@ -6,23 +6,28 @@ from keras.layers import Embedding
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 from keras.layers import LSTM
 import utils
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Performs classification using LSTM network.
 
-FREQ_DIST_FILE = '../train-processed-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../train-processed-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../train-processed.csv'
-TEST_PROCESSED_FILE = '../test-processed.csv'
-GLOVE_FILE = './dataset/glove-seeds.txt'
+# FREQ_DIST_FILE = '../train-processed-freqdist.pkl'
+# BI_FREQ_DIST_FILE = '../train-processed-freqdist-bi.pkl'
+# TRAIN_PROCESSED_FILE = '../train-processed.csv'
+# TEST_PROCESSED_FILE = '../test-processed.csv'
+
+FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed.csv'
+TEST_PROCESSED_FILE = '../twitter_data/smallDataset/train-processed_x.csv'
+GLOVE_FILE = '../dataset/glove-seeds.txt'
 dim = 200
 
 
 def get_glove_vectors(vocab):
-    print 'Looking for GLOVE vectors'
+    print('Looking for GLOVE vectors')
     glove_vectors = {}
     found = 0
-    with open(GLOVE_FILE, 'r') as glove_file:
+    with open(GLOVE_FILE, 'r', encoding='utf-8') as glove_file:
         for i, line in enumerate(glove_file):
             utils.write_status(i + 1, 0)
             tokens = line.split()
@@ -31,8 +36,8 @@ def get_glove_vectors(vocab):
                 vector = [float(e) for e in tokens[1:]]
                 glove_vectors[word] = np.array(vector)
                 found += 1
-    print '\n'
-    print 'Found %d words in GLOVE' % found
+    print('\n')
+    print('Found %d words in GLOVE' % found)
     return glove_vectors
 
 
@@ -52,7 +57,7 @@ def get_feature_vector(tweet):
 def process_tweets(csv_file, test_file=True):
     tweets = []
     labels = []
-    print 'Generating feature vectors'
+    print('Generating feature vectors')
     with open(csv_file, 'r') as csv:
         lines = csv.readlines()
         total = len(lines)
@@ -68,7 +73,7 @@ def process_tweets(csv_file, test_file=True):
                 tweets.append(feature_vector)
                 labels.append(int(sentiment))
             utils.write_status(i + 1, total)
-    print '\n'
+    print('\n')
     return tweets, np.array(labels)
 
 
@@ -103,14 +108,14 @@ if __name__ == '__main__':
         model.add(Dense(1))
         model.add(Activation('sigmoid'))
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-        filepath = "./models/lstm-{epoch:02d}-{loss:0.3f}-{acc:0.3f}-{val_loss:0.3f}-{val_acc:0.3f}.hdf5"
+        filepath = "./models/lstm-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor="loss", verbose=1, save_best_only=True, mode='min')
         reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=2, min_lr=0.000001)
-        print model.summary()
+        print(model.summary())
         model.fit(tweets, labels, batch_size=128, epochs=5, validation_split=0.1, shuffle=True, callbacks=[checkpoint, reduce_lr])
     else:
         model = load_model(sys.argv[1])
-        print model.summary()
+        print(model.summary())
         test_tweets, _ = process_tweets(TEST_PROCESSED_FILE, test_file=True)
         test_tweets = pad_sequences(test_tweets, maxlen=max_length, padding='post')
         predictions = model.predict(test_tweets, batch_size=128, verbose=1)
