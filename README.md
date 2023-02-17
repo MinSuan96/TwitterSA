@@ -2,6 +2,8 @@
 
 [document link](https://docs.google.com/document/d/1E2ZUizHiy368AmD0TezSCoE2lEPxrajS8YF6r28Ezuc/edit?usp=sharing)
 
+[glove_seeds](https://nlp.stanford.edu/data/glove.twitter.27B.zip)
+
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/twitter-sentiment-analysis-1/classification-on-maximum-entropy)](https://paperswithcode.com/sota/classification-on-maximum-entropy?p=twitter-sentiment-analysis-1)
 
 
