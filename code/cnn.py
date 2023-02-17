@@ -19,6 +19,7 @@ TEST_PROCESSED_FILE = '../twitter_data/smallDataset/train-processed_x.csv'
 TEST_LABEL_FILE = '../twitter_data/smallDataset/train-processed_y.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
 MODEL_FILE = './models/4cnn-08-0.024-0.087.hdf5'
+REPORT_FILE = './reports/4cnn-08-0.024-0.087-smallDataset-train-processed_x.csv'
 train = False
 dim = 200
 
@@ -136,4 +137,7 @@ if __name__ == '__main__':
         id_results = zip(map(str, range(len(test_tweets))), results)
         utils.save_results_to_csv(id_results, 'cnn.csv')
         test_label = utils.file_number_to_list(TEST_LABEL_FILE)
-        print(classification_report(test_label, results))
+        report = classification_report(test_label, results, output_dict=True)
+        print(report)
+        df_report = pd.DataFrame(report).transpose()
+        df_report.to_csv(REPORT_FILE)
