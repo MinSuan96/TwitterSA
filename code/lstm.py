@@ -7,19 +7,20 @@ from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 from keras.layers import LSTM
 import utils
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import pandas as pd
+from sklearn.metrics import classification_report
 
 # Performs classification using LSTM network.
 
-# FREQ_DIST_FILE = '../train-processed-freqdist.pkl'
-# BI_FREQ_DIST_FILE = '../train-processed-freqdist-bi.pkl'
-# TRAIN_PROCESSED_FILE = '../train-processed.csv'
-# TEST_PROCESSED_FILE = '../test-processed.csv'
-
+train = False
 FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist.pkl'
 BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist-bi.pkl'
 TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed.csv'
 TEST_PROCESSED_FILE = '../twitter_data/smallDataset/train-processed_x.csv'
+TEST_LABEL_FILE = '../twitter_data/smallDataset/train-processed_y.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
+MODEL_FILE = './models/lstm-05-0.051-0.081.hdf5'
+REPORT_FILE = './reports/lstm-05-0.051-0.081-smallDataset-train-processed_x.csv'
 dim = 200
 
 
@@ -78,7 +79,6 @@ def process_tweets(csv_file, test_file=True):
 
 
 if __name__ == '__main__':
-    train = len(sys.argv) == 1
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 500
@@ -114,10 +114,16 @@ if __name__ == '__main__':
         print(model.summary())
         model.fit(tweets, labels, batch_size=128, epochs=5, validation_split=0.1, shuffle=True, callbacks=[checkpoint, reduce_lr])
     else:
-        model = load_model(sys.argv[1])
+        model = load_model(MODEL_FILE)
         print(model.summary())
         test_tweets, _ = process_tweets(TEST_PROCESSED_FILE, test_file=True)
         test_tweets = pad_sequences(test_tweets, maxlen=max_length, padding='post')
         predictions = model.predict(test_tweets, batch_size=128, verbose=1)
-        results = zip(map(str, range(len(test_tweets))), np.round(predictions[:, 0]).astype(int))
-        utils.save_results_to_csv(results, 'lstm.csv')
+        results = np.round(predictions[:, 0]).astype(int)
+        id_results = zip(map(str, range(len(test_tweets))), results)
+        utils.save_results_to_csv(id_results, 'lstm.csv')
+        test_label = utils.file_number_to_list(TEST_LABEL_FILE)
+        report = classification_report(test_label, results, output_dict=True)
+        print(classification_report(test_label, results, output_dict=False))
+        df_report = pd.DataFrame(report).transpose()
+        df_report.to_csv(REPORT_FILE)
