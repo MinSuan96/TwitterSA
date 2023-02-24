@@ -138,6 +138,6 @@ if __name__ == '__main__':
         utils.save_results_to_csv(id_results, 'cnn.csv')
         test_label = utils.file_number_to_list(TEST_LABEL_FILE)
         report = classification_report(test_label, results, output_dict=True)
-        print(report)
+        print(classification_report(test_label, results, output_dict=False))
         df_report = pd.DataFrame(report).transpose()
         df_report.to_csv(REPORT_FILE)
