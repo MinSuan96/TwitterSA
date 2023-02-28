@@ -6,16 +6,18 @@ from keras.preprocessing.sequence import pad_sequences
 
 # Extracts dense vector features from penultimate layer of CNN model.
 
-FREQ_DIST_FILE = '../train-processed-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../train-processed-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../train-processed.csv'
-TEST_PROCESSED_FILE = '../test-processed.csv'
-GLOVE_FILE = './dataset/glove-seeds.txt'
+FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed.csv'
+TEST_PROCESSED_FILE = '../twitter_data/smallDataset/train-processed_x.csv'
+TEST_LABEL_FILE = '../twitter_data/smallDataset/train-processed_y.csv'
+GLOVE_FILE = '../dataset/glove-seeds.txt'
+REPORT_FILE = './reports/4cnn-08-0.024-0.087-smallDataset-train-processed_x.csv'
 dim = 200
 
 
 def get_glove_vectors(vocab):
-    print 'Looking for GLOVE seeds'
+    print('Looking for GLOVE seeds')
     glove_vectors = {}
     found = 0
     with open(GLOVE_FILE, 'r') as glove_file:
@@ -27,7 +29,7 @@ def get_glove_vectors(vocab):
                 vector = [float(e) for e in tokens[1:]]
                 glove_vectors[word] = np.array(vector)
                 found += 1
-    print '\n'
+    print('\n')
     return glove_vectors
 
 
@@ -47,7 +49,7 @@ def get_feature_vector(tweet):
 def process_tweets(csv_file, test_file=True):
     tweets = []
     labels = []
-    print 'Generating feature vectors'
+    print('Generating feature vectors')
     with open(csv_file, 'r') as csv:
         lines = csv.readlines()
         total = len(lines)
@@ -63,7 +65,7 @@ def process_tweets(csv_file, test_file=True):
                 tweets.append(feature_vector)
                 labels.append(int(sentiment))
             utils.write_status(i + 1, total)
-    print '\n'
+    print('\n')
     return tweets, np.array(labels)
 
 
@@ -85,7 +87,7 @@ if __name__ == '__main__':
     model = load_model(sys.argv[1])
     model = Model(model.layers[0].input, model.layers[-3].output)
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-    print model.summary()
+    print(model.summary())
     test_tweets, _ = process_tweets(TEST_PROCESSED_FILE, test_file=True)
     test_tweets = pad_sequences(test_tweets, maxlen=max_length, padding='post')
     predictions = model.predict(test_tweets, batch_size=1024, verbose=1)

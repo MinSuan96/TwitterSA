@@ -12,15 +12,15 @@ from sklearn.metrics import classification_report
 
 # Performs classification using CNN.
 
-FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed.csv'
-TEST_PROCESSED_FILE = '../twitter_data/smallDataset/train-processed_x.csv'
-TEST_LABEL_FILE = '../twitter_data/smallDataset/train-processed_y.csv'
+FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train.csv'
+TEST_PROCESSED_FILE = '../twitter_data/smallDataset/Twitter_Data-processed-X-test.csv'
+TEST_LABEL_FILE = '../twitter_data/smallDataset/Twitter_Data-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
-MODEL_FILE = './models/4cnn-08-0.024-0.087.hdf5'
-REPORT_FILE = './reports/4cnn-08-0.024-0.087-smallDataset-train-processed_x.csv'
-train = False
+MODEL_FILE = './models/4cnn-08-0.032-0.100.hdf5'
+REPORT_FILE = './reports/Twitter_Data-processed.csv'
+train = True
 dim = 200
 
 
