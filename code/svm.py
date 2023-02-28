@@ -9,9 +9,9 @@ import pandas as pd
 
 # Performs classification using SVM.
 
-FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train.csv'
+FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train.csv'
 TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-test.csv'
 TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
 REPORT_FILE = './reports/svm-Twitter_Data.csv'
