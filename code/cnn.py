@@ -15,12 +15,12 @@ from sklearn.metrics import classification_report
 FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train-freqdist.pkl'
 BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train-freqdist-bi.pkl'
 TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-train.csv'
-TEST_PROCESSED_FILE = '../twitter_data/smallDataset/Twitter_Data-processed-X-test.csv'
-TEST_LABEL_FILE = '../twitter_data/smallDataset/Twitter_Data-processed-y-test.csv'
+TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-test.csv'
+TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
-MODEL_FILE = './models/4cnn-08-0.032-0.100.hdf5'
-REPORT_FILE = './reports/Twitter_Data-processed.csv'
-train = True
+MODEL_FILE = './models/4cnn-08-0.026-0.095.hdf5'
+REPORT_FILE = './reports/cnn-Twitter_Data-processed.csv'
+train = False
 dim = 200
 
 
