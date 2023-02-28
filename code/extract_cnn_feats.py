@@ -20,7 +20,7 @@ def get_glove_vectors(vocab):
     print('Looking for GLOVE seeds')
     glove_vectors = {}
     found = 0
-    with open(GLOVE_FILE, 'r') as glove_file:
+    with open(GLOVE_FILE, 'r',encoding='utf-8') as glove_file:
         for i, line in enumerate(glove_file):
             utils.write_status(i + 1, 0)
             tokens = line.strip().split()

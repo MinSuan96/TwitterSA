@@ -9,11 +9,11 @@ from sklearn.metrics import classification_report
 
 # Performs classification using Decision Tree.
 
-FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed.csv'
-TEST_PROCESSED_FILE = '../twitter_data/smallDataset/train-processed_x.csv'
-TEST_LABEL_FILE = '../twitter_data/smallDataset/train-processed_y.csv'
+FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train.csv'
+TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-test.csv'
+TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
 REPORT_FILE = './reports/decisiontree.csv'
 
 # True while training.
