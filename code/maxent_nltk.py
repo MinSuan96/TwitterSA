@@ -4,17 +4,21 @@ import pickle
 import sys
 import numpy as np
 from utils import save_results_to_csv
+import utils
+import pandas as pd
+from sklearn.metrics import classification_report
 
 
-TRAIN_PROCESSED_FILE = '../train-processed.csv'
-TEST_PROCESSED_FILE = '../test-processed.csv'
-USE_BIGRAMS = False
-TRAIN = True
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train.csv'
+TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-test.csv'
+TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
+REPORT_FILE = './reports/maxent_nltk-Twitter_Data-processed.csv'
+USE_BIGRAMS = True
 
 
 def get_data_from_file(file_name, isTrain=True):
     data = []
-    with open(train_csv_file, 'r') as csv:
+    with open(file_name, 'r') as csv:
         lines = csv.readlines()
         total = len(lines)
         for i, line in enumerate(lines):
@@ -42,7 +46,6 @@ def list_to_dict(words_list):
     return dict([(word, True) for word in words_list])
 
 if __name__ == '__main__':
-    train = True
     np.random.seed(1337)
     train_csv_file = TRAIN_PROCESSED_FILE
     test_csv_file = TEST_PROCESSED_FILE
@@ -63,11 +66,11 @@ if __name__ == '__main__':
         if determined_label!=label:
             count+=int(1)
     accuracy = (len(validation_set)-count)/len(validation_set)
-    print 'Validation set accuracy:%.4f'% (accuracy)
+    print('Validation set accuracy:%.4f'% (accuracy))
     f = open('maxEnt_classifier.pickle', 'wb')
     pickle.dump(classifier, f)
     f.close()
-    print '\nPredicting for test data'
+    print('\nPredicting for test data')
     test_data = get_data_from_file(test_csv_file, isTrain=False)
     test_set_formatted = [(list_to_dict(element[0]), element[1]) for element in test_data]
     tweet_id = int(0)
@@ -78,4 +81,11 @@ if __name__ == '__main__':
         results.append((str(tweet_id), label))
         tweet_id += int(1)
     save_results_to_csv(results, 'maxent.csv')
-    print '\nSaved to maxent.csv'
+    print('\nSaved to maxent.csv')
+    
+    results = np.array(results)[:, 1].astype(int)
+    test_label = utils.file_number_to_list(TEST_LABEL_FILE)
+    report = classification_report(test_label, results, output_dict=True)
+    print((classification_report(test_label, results, output_dict=False)))
+    df_report = pd.DataFrame(report).transpose()
+    df_report.to_csv(REPORT_FILE)
