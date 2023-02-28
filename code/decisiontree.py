@@ -4,13 +4,17 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from scipy.sparse import lil_matrix
 from sklearn.feature_extraction.text import TfidfTransformer
+import pandas as pd
+from sklearn.metrics import classification_report
 
 # Performs classification using Decision Tree.
 
-FREQ_DIST_FILE = '../twitter_data/train-processed-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/train-processed-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/train-processed.csv'
-TEST_PROCESSED_FILE = '../twitter_data/test-processed.csv'
+FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data_train-processed.csv'
+TEST_PROCESSED_FILE = '../twitter_data/smallDataset/train-processed_x.csv'
+TEST_LABEL_FILE = '../twitter_data/smallDataset/train-processed_y.csv'
+REPORT_FILE = './reports/decisiontree.csv'
 
 # True while training.
 TRAIN = False
@@ -163,7 +167,12 @@ if __name__ == '__main__':
             predictions = np.concatenate((predictions, prediction))
             utils.write_status(i, n_test_batches)
             i += 1
+        results = [int(predictions[i]) for i in range(len(test_tweets))]
         predictions = [(str(j), int(predictions[j]))
                        for j in range(len(test_tweets))]
         utils.save_results_to_csv(predictions, 'decisiontree.csv')
-        print('\nSaved to decisiontree.csv')
+        test_label = utils.file_number_to_list(TEST_LABEL_FILE)
+        report = classification_report(test_label, results, output_dict=True)
+        print(classification_report(test_label, results, output_dict=False))
+        df_report = pd.DataFrame(report).transpose()
+        df_report.to_csv(REPORT_FILE)
