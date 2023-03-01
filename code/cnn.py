@@ -23,6 +23,7 @@ REPORT_FILE = './reports/cnn-Twitter_Data-processed.csv'
 train = False
 dim = 200
 max_length = 40
+four_cnn = True
 
 
 def get_glove_vectors(vocab):
@@ -115,7 +116,8 @@ if __name__ == '__main__':
         model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1))
         model.add(Conv1D(300, kernel_size, padding='valid', activation='relu', strides=1))
         model.add(Conv1D(150, kernel_size, padding='valid', activation='relu', strides=1))
-        model.add(Conv1D(75, kernel_size, padding='valid', activation='relu', strides=1))
+        if four_cnn:
+            model.add(Conv1D(75, kernel_size, padding='valid', activation='relu', strides=1))
         model.add(Flatten())
         model.add(Dense(600))
         model.add(Dropout(0.5))
