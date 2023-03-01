@@ -22,6 +22,7 @@ MODEL_FILE = './models/4cnn-08-0.026-0.095.hdf5'
 REPORT_FILE = './reports/cnn-Twitter_Data-processed.csv'
 train = False
 dim = 200
+max_length = 40
 
 
 def get_glove_vectors(vocab):
@@ -91,7 +92,6 @@ if __name__ == '__main__':
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 500
-    max_length = 40
     filters = 600
     kernel_size = 3
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
