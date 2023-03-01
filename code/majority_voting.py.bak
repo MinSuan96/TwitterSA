@@ -14,10 +14,10 @@ def main():
         with open(csv, 'r') as f:
             lines = f.readlines()[1:]
             current_preds = np.array([int(l.split(',')[1]) for l in lines])
-            predictions[list(range(NUM_PREDICTION_ROWS)), current_preds] += 1
-    print(predictions[:50])
+            predictions[range(NUM_PREDICTION_ROWS), current_preds] += 1
+    print predictions[:50]
     predictions = np.argmax(predictions, axis=1)
-    results = list(zip(list(map(str, list(range(NUM_PREDICTION_ROWS)))), predictions))
+    results = zip(map(str, range(NUM_PREDICTION_ROWS)), predictions)
     utils.save_results_to_csv(results, 'majority-voting.csv')
 
 
