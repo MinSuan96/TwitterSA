@@ -5,16 +5,20 @@ from numpy import loadtxt
 import numpy as np
 import pickle
 import utils
+import pandas as pd
+from sklearn.metrics import classification_report
 
 # Performs SVM classification on features extracted from penultimate layer of CNN model.
 
 
-TRAIN_FEATURES_FILE = './train-feats.npy'
-TRAIN_LABELS_FILE = './train-labels.txt'
-TEST_FEATURES_FILE = './test-feats.npy'
+TRAIN_FEATURES_FILE = './models/train-feats.npy'
+TRAIN_LABELS_FILE = './models/train-labels.txt'
+TEST_FEATURES_FILE = './models/test-feats.npy'
+TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
+REPORT_FILE = './reports/cnn_feats_svm.csv'
 CLASSIFIER = 'SVM'
 MODEL_FILE = 'cnn-feats-%s.pkl' % CLASSIFIER
-TRAIN = True
+TRAIN = False
 C = 1
 MAX_ITER = 1000
 
@@ -47,3 +51,8 @@ else:
     test_preds = model.predict(X_test)
     results = zip(map(str, range(X_test.shape[0])), test_preds)
     utils.save_results_to_csv(results, 'cnn-feats-svm-linear-%.2f-%d.csv' % (C, MAX_ITER))
+    test_label = utils.file_number_to_list(TEST_LABEL_FILE)
+    report = classification_report(test_label, test_preds, output_dict=True)
+    print(classification_report(test_label, test_preds, output_dict=False))
+    df_report = pd.DataFrame(report).transpose()
+    df_report.to_csv(REPORT_FILE)
