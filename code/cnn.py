@@ -22,6 +22,8 @@ MODEL_FILE = './models/4cnn-08-0.026-0.095.hdf5'
 REPORT_FILE = './reports/cnn-Twitter_Data-processed.csv'
 train = False
 dim = 200
+max_length = 40
+four_cnn = True
 
 
 def get_glove_vectors(vocab):
@@ -91,7 +93,6 @@ if __name__ == '__main__':
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 500
-    max_length = 40
     filters = 600
     kernel_size = 3
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
@@ -115,7 +116,8 @@ if __name__ == '__main__':
         model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1))
         model.add(Conv1D(300, kernel_size, padding='valid', activation='relu', strides=1))
         model.add(Conv1D(150, kernel_size, padding='valid', activation='relu', strides=1))
-        model.add(Conv1D(75, kernel_size, padding='valid', activation='relu', strides=1))
+        if four_cnn:
+            model.add(Conv1D(75, kernel_size, padding='valid', activation='relu', strides=1))
         model.add(Flatten())
         model.add(Dense(600))
         model.add(Dropout(0.5))
@@ -123,7 +125,10 @@ if __name__ == '__main__':
         model.add(Dense(1))
         model.add(Activation('sigmoid'))
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-        filepath = "./models/4cnn-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
+        if four_cnn:
+            filepath = "./models/4cnn-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
+        else:
+            filepath = "./models/3cnn-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor="loss", verbose=1, save_best_only=True, mode='min')
         reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=2, min_lr=0.000001)
         model.fit(tweets, labels, batch_size=128, epochs=8, validation_split=0.1, shuffle=True, callbacks=[checkpoint, reduce_lr])
