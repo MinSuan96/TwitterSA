@@ -18,12 +18,13 @@ TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train.
 TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-test.csv'
 TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
-MODEL_FILE = './models/4cnn-08-0.026-0.095.hdf5'
-REPORT_FILE = './reports/cnn-Twitter_Data-processed.csv'
+MODEL_FILE = './models/3cnn-08-0.025-0.094.hdf5'
+REPORT_FILE = './reports/3cnn.csv'
 train = False
 dim = 200
 max_length = 40
-four_cnn = True
+four_cnn = False
+prediction_file_name = '3nn.csv'
 
 
 def get_glove_vectors(vocab):
@@ -140,7 +141,7 @@ if __name__ == '__main__':
         predictions = model.predict(test_tweets, batch_size=128, verbose=1)
         results = np.round(predictions[:, 0]).astype(int)
         id_results = zip(map(str, range(len(test_tweets))), results)
-        utils.save_results_to_csv(id_results, 'cnn.csv')
+        utils.save_results_to_csv(id_results, prediction_file_name)
         test_label = utils.file_number_to_list(TEST_LABEL_FILE)
         report = classification_report(test_label, results, output_dict=True)
         print(classification_report(test_label, results, output_dict=False))
