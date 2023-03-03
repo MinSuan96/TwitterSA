@@ -151,11 +151,7 @@ if __name__ == '__main__':
         id_results = zip(map(str, range(len(test_tweets))), results)
         utils.save_results_to_csv(id_results, 'cnn.csv')
         test_label = utils.file_number_to_list(TEST_LABEL_FILE)
-        # Convert test labels to one-hot encoding
-        test_label = pd.get_dummies(test_label).values
-        # Remove the neutral column
-        test_label = np.delete(test_label, 1, axis=1)
-        report = classification_report(test_label, predictions, target_names=['negative', 'positive'], output_dict=True)
-        print(classification_report(test_label, predictions, target_names=['negative', 'positive'], output_dict=False))
+        report = classification_report(test_label, results, target_names=['negative', 'neutral', 'positive'], output_dict=True)
+        print(classification_report(test_label, results, target_names=['negative', 'neutral', 'positive'], output_dict=False))
         df_report = pd.DataFrame(report).transpose()
         df_report.to_csv(REPORT_FILE)
