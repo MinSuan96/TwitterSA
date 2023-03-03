@@ -12,14 +12,14 @@ from sklearn.metrics import classification_report
 
 # Performs classification using CNN.
 
-FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train.csv'
-TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-test.csv'
-TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
+FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train.csv'
+TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test.csv'
+TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
-MODEL_FILE = './models/4cnn-08-0.049-0.161.hdf5'
-REPORT_FILE = './reports/cnn-Twitter_Data-processed.csv'
+MODEL_FILE = './models/4cnn-08-0.077-0.195.hdf5'
+REPORT_FILE = './reports/3-sentiments.csv'
 train = False
 dim = 200
 
@@ -74,25 +74,28 @@ def process_tweets(csv_file, test_file=True):
         for i, line in enumerate(lines):
             if test_file:
                 tweet_id, tweet = line.split(',')
-        else:
-            tweet_id, sentiment, tweet = line.split(',')
-        feature_vector = get_feature_vector(tweet)
-        if test_file:
-            tweets.append(feature_vector)
-        else:
-            tweets.append(feature_vector)
-            # One-hot encode labels
-            if sentiment == '1':
-                labels.append([1,0,0])
-            elif sentiment == '0':
-                labels.append([0,1,0])
-            elif sentiment == '-1':
-                labels.append([0,0,1])
-        utils.write_status(i + 1, total)
-print('\n')
-return tweets, np.array(labels)
+            else:
+                tweet_id, sentiment, tweet = line.split(',')
+                # Convert sentiment labels to one-hot encoding
+                sentiment_onehot = [0, 0, 0]
+                if sentiment == "1":
+                    sentiment_onehot[2] = 1
+                elif sentiment == "0":
+                    sentiment_onehot[1] = 1
+                elif sentiment == "-1":
+                    sentiment_onehot[0] = 1
+                labels.append(sentiment_onehot)
+            feature_vector = get_feature_vector(tweet)
+            if test_file:
+                tweets.append(feature_vector)
+            else:
+                tweets.append(feature_vector)
+            utils.write_status(i + 1, total)
+    print('\n')
+    return tweets, np.array(labels)
 
-if __name__ == 'main':
+
+if __name__ == '__main__':
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 500
@@ -100,8 +103,11 @@ if __name__ == 'main':
     filters = 600
     kernel_size = 3
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
-    glove_vectors = get_glove_vectors(vocab)
+    
+  
     tweets, labels = process_tweets(TRAIN_PROCESSED_FILE, test_file=False)
+    print(len(tweets), len(labels))
+    glove_vectors = get_glove_vectors(vocab)
     # Create and embedding matrix
     embedding_matrix = np.random.randn(vocab_size + 1, dim) * 0.01
     # Seed it with GloVe vectors
@@ -133,6 +139,7 @@ if __name__ == 'main':
         filepath = "./models/4cnn-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor="loss", verbose=1, save_best_only=True, mode='min')
         reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=2, min_lr=0.000001)
+        print(tweets, labels)
         model.fit(tweets, labels, batch_size=128, epochs=8, validation_split=0.1, shuffle=True, callbacks=[checkpoint, reduce_lr])
     else:
         model = load_model(MODEL_FILE)
