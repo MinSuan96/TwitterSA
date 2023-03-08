@@ -6,11 +6,11 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Extracts dense vector features from penultimate layer of CNN model.
 
-FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-train.csv'
-TEST_PROCESSED_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-X-test.csv'
-TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
+FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-freqdist.pkl'
+BI_FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-freqdist-bi.pkl'
+TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train.csv'
+TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test.csv'
+TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
 dim = 200
 
@@ -49,7 +49,7 @@ def process_tweets(csv_file, test_file=True):
     tweets = []
     labels = []
     print('Generating feature vectors')
-    with open(csv_file, 'r') as csv:
+    with open(csv_file, 'r', encoding="utf-8") as csv:
         lines = csv.readlines()
         total = len(lines)
         for i, line in enumerate(lines):
@@ -57,12 +57,20 @@ def process_tweets(csv_file, test_file=True):
                 tweet_id, tweet = line.split(',')
             else:
                 tweet_id, sentiment, tweet = line.split(',')
+                # Convert sentiment labels to one-hot encoding
+                sentiment_onehot = [0, 0, 0]
+                if sentiment == "1":
+                    sentiment_onehot[2] = 1
+                elif sentiment == "0":
+                    sentiment_onehot[1] = 1
+                elif sentiment == "-1":
+                    sentiment_onehot[0] = 1
+                labels.append(sentiment_onehot)
             feature_vector = get_feature_vector(tweet)
             if test_file:
                 tweets.append(feature_vector)
             else:
                 tweets.append(feature_vector)
-                labels.append(int(sentiment))
             utils.write_status(i + 1, total)
     print('\n')
     return tweets, np.array(labels)
@@ -82,9 +90,10 @@ if __name__ == '__main__':
     shuffled_indices = np.random.permutation(tweets.shape[0])
     tweets = tweets[shuffled_indices]
     labels = labels[shuffled_indices]
-    model = load_model("./models/4cnn-08-0.026-0.095.hdf5")
+    labels = np.argmax(labels, axis=1) - 1 
+    model = load_model("./models/4cnn-08-0.058-0.124.hdf5")
     model = Model(model.layers[0].input, model.layers[-3].output)
-    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
     test_tweets, _ = process_tweets(TEST_PROCESSED_FILE, test_file=True)
     test_tweets = pad_sequences(test_tweets, maxlen=max_length, padding='post')

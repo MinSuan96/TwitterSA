@@ -18,7 +18,7 @@ TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train.csv'
 TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test.csv'
 TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
-MODEL_FILE = './models/4cnn-08-0.077-0.195.hdf5'
+MODEL_FILE = './models/4cnn-08-0.058-0.124.hdf5'
 REPORT_FILE = './reports/3-sentiments.csv'
 train = False
 dim = 200
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 500
-    max_length = 30
+    max_length = 40
     filters = 600
     kernel_size = 3
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)

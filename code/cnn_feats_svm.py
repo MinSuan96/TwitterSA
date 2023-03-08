@@ -14,8 +14,8 @@ from sklearn.metrics import classification_report
 TRAIN_FEATURES_FILE = './models/train-feats.npy'
 TRAIN_LABELS_FILE = './models/train-labels.txt'
 TEST_FEATURES_FILE = './models/test-feats.npy'
-TEST_LABEL_FILE = '../twitter_data/bigDataset/Twitter_Data-processed-y-test.csv'
-REPORT_FILE = './reports/cnn_feats_svm.csv'
+TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test.csv'
+REPORT_FILE = './reports/cnn_feats_svm_3sentiments.csv'
 CLASSIFIER = 'SVM'
 MODEL_FILE = 'cnn-feats-%s.pkl' % CLASSIFIER
 TRAIN = False
