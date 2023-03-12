@@ -18,8 +18,8 @@ TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train.csv'
 TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test.csv'
 TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
-MODEL_FILE = './models/4cnn-08-0.052-1.076.hdf5'
-train = True
+MODEL_FILE = './models/4cnn-08-0.020-0.283.hdf5'
+train = False
 dim = 200
 
 
@@ -104,21 +104,21 @@ if __name__ == '__main__':
     layers = 6
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
     REPORT_FILE = './reports/3-sentiments-{}cnn-{}kernel.csv'.format(layers, kernel_size)
-  
-    tweets, labels = process_tweets(TRAIN_PROCESSED_FILE, test_file=False)
-    glove_vectors = get_glove_vectors(vocab)
-    # Create and embedding matrix
-    embedding_matrix = np.random.randn(vocab_size + 1, dim) * 0.01
-    # Seed it with GloVe vectors
-    for word, i in vocab.items():
-        glove_vector = glove_vectors.get(word)
-        if glove_vector is not None:
-            embedding_matrix[i] = glove_vector
-    tweets = pad_sequences(tweets, maxlen=max_length, padding='post')
-    shuffled_indices = np.random.permutation(tweets.shape[0])
-    tweets = tweets[shuffled_indices]
-    labels = labels[shuffled_indices]
-    if train:
+
+    if train:  
+        tweets, labels = process_tweets(TRAIN_PROCESSED_FILE, test_file=False)
+        glove_vectors = get_glove_vectors(vocab)
+        # Create and embedding matrix
+        embedding_matrix = np.random.randn(vocab_size + 1, dim) * 0.01
+        # Seed it with GloVe vectors
+        for word, i in vocab.items():
+            glove_vector = glove_vectors.get(word)
+            if glove_vector is not None:
+                embedding_matrix[i] = glove_vector
+        tweets = pad_sequences(tweets, maxlen=max_length, padding='post')
+        shuffled_indices = np.random.permutation(tweets.shape[0])
+        tweets = tweets[shuffled_indices]
+        labels = labels[shuffled_indices]
         model = Sequential()
         model.add(Embedding(vocab_size + 1, dim, weights=[embedding_matrix], input_length=max_length))
         model.add(Dropout(0.4))
@@ -142,7 +142,6 @@ if __name__ == '__main__':
         filepath = "./models/4cnn-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor="loss", verbose=1, save_best_only=True, mode='min')
         reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=2, min_lr=0.000001)
-        print(tweets, labels)
         model.fit(tweets, labels, batch_size=128, epochs=8, validation_split=0.1, shuffle=True, callbacks=[checkpoint, reduce_lr])
     else:
         model = load_model(MODEL_FILE)
