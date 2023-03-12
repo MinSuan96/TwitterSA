@@ -18,9 +18,8 @@ TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train.csv'
 TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test.csv'
 TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
-MODEL_FILE = './models/4cnn-08-0.058-0.124.hdf5'
-REPORT_FILE = './reports/3-sentiments.csv'
-train = False
+MODEL_FILE = './models/4cnn-08-0.052-1.076.hdf5'
+train = True
 dim = 200
 
 
@@ -101,20 +100,20 @@ if __name__ == '__main__':
     batch_size = 500
     max_length = 40
     filters = 600
-    kernel_size = 3
+    kernel_size = 7
+    layers = 6
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
-    
+    REPORT_FILE = './reports/3-sentiments-{}cnn-{}kernel.csv'.format(layers, kernel_size)
   
     tweets, labels = process_tweets(TRAIN_PROCESSED_FILE, test_file=False)
-    print(len(tweets), len(labels))
-    glove_vectors = get_glove_vectors(vocab)
+    # glove_vectors = get_glove_vectors(vocab)
     # Create and embedding matrix
     embedding_matrix = np.random.randn(vocab_size + 1, dim) * 0.01
     # Seed it with GloVe vectors
-    for word, i in vocab.items():
-        glove_vector = glove_vectors.get(word)
-        if glove_vector is not None:
-            embedding_matrix[i] = glove_vector
+    # for word, i in vocab.items():
+    #     glove_vector = glove_vectors.get(word)
+    #     if glove_vector is not None:
+    #         embedding_matrix[i] = glove_vector
     tweets = pad_sequences(tweets, maxlen=max_length, padding='post')
     shuffled_indices = np.random.permutation(tweets.shape[0])
     tweets = tweets[shuffled_indices]
@@ -123,16 +122,20 @@ if __name__ == '__main__':
         model = Sequential()
         model.add(Embedding(vocab_size + 1, dim, weights=[embedding_matrix], input_length=max_length))
         model.add(Dropout(0.4))
-        model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1))
-        model.add(Conv1D(300, kernel_size, padding='valid', activation='relu', strides=1))
-        model.add(Conv1D(150, kernel_size, padding='valid', activation='relu', strides=1))
+        if layers > 3:
+            for i in range(layers - 3):
+                model.add(Conv1D(filters, kernel_size, padding='valid', activation='relu', strides=1))
+        if layers >= 3:
+            model.add(Conv1D(300, kernel_size, padding='valid', activation='relu', strides=1))
+        if layers >= 2:
+            model.add(Conv1D(150, kernel_size, padding='valid', activation='relu', strides=1))
         model.add(Conv1D(75, kernel_size, padding='valid', activation='relu', strides=1))
         model.add(Flatten())
         model.add(Dense(600))
         model.add(Dropout(0.5))
         model.add(Activation('relu'))
         # Change output layer to have 3 nodes and softmax activation
-        model.add(Dense(3))
+        model.add(Dense(3)) 
         model.add(Activation('softmax'))
         # Change loss function to categorical_crossentropy
         model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
