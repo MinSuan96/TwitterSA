@@ -109,7 +109,7 @@ if __name__ == '__main__':
     glove_vectors = get_glove_vectors(vocab)
     # Create and embedding matrix
     embedding_matrix = np.random.randn(vocab_size + 1, dim) * 0.01
-    Seed it with GloVe vectors
+    # Seed it with GloVe vectors
     for word, i in vocab.items():
         glove_vector = glove_vectors.get(word)
         if glove_vector is not None:
