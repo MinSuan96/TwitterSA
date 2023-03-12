@@ -106,14 +106,14 @@ if __name__ == '__main__':
     REPORT_FILE = './reports/3-sentiments-{}cnn-{}kernel.csv'.format(layers, kernel_size)
   
     tweets, labels = process_tweets(TRAIN_PROCESSED_FILE, test_file=False)
-    # glove_vectors = get_glove_vectors(vocab)
+    glove_vectors = get_glove_vectors(vocab)
     # Create and embedding matrix
     embedding_matrix = np.random.randn(vocab_size + 1, dim) * 0.01
-    # Seed it with GloVe vectors
-    # for word, i in vocab.items():
-    #     glove_vector = glove_vectors.get(word)
-    #     if glove_vector is not None:
-    #         embedding_matrix[i] = glove_vector
+    Seed it with GloVe vectors
+    for word, i in vocab.items():
+        glove_vector = glove_vectors.get(word)
+        if glove_vector is not None:
+            embedding_matrix[i] = glove_vector
     tweets = pad_sequences(tweets, maxlen=max_length, padding='post')
     shuffled_indices = np.random.permutation(tweets.shape[0])
     tweets = tweets[shuffled_indices]
