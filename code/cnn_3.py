@@ -153,16 +153,17 @@ if __name__ == '__main__':
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 128
-    max_length = 10
+    max_length = 15
     filters = 600
-    kernel_size = [5, 7]
-    layers = [2, 1]
+    kernel_size = [3, 5, 7, 9]
+    layers = [7, 3, 2, 1]
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
     report_file = './reports/3-sentiments-report-{}cnn-{}kernel-{}mlength.csv'.format(layers, kernel_size, max_length)
     training = True
     train_and_test = True
     if training:  
-        for i in range(2):
+        for i in range(len(layers)):
+            report_file = './reports/3-sentiments-report-{}cnn-{}kernel-{}mlength.csv'.format(layers[i], kernel_size[i], max_length)
             train(vocab, vocab_size, max_length, layers[i], filters, kernel_size[i], report_file, train_and_test)
     else:
         test(layers, kernel_size, batch_size, max_length, report_file)
