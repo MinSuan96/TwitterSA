@@ -19,7 +19,7 @@ TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test.csv'
 TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
 MODEL_FILE = './models/4cnn-08-0.020-0.283.hdf5'
-train = False
+train = True
 dim = 200
 
 
@@ -98,10 +98,10 @@ if __name__ == '__main__':
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 500
-    max_length = 40
+    max_length = 10
     filters = 600
-    kernel_size = 7
-    layers = 6
+    kernel_size = 3
+    layers = 3
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
     REPORT_FILE = './reports/3-sentiments-{}cnn-{}kernel.csv'.format(layers, kernel_size)
 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         model.add(Activation('softmax'))
         # Change loss function to categorical_crossentropy
         model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-        filepath = "./models/4cnn-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
+        filepath = "./models/{layers:02d}cnn-{kernel_size:02d}kernelSize-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor="loss", verbose=1, save_best_only=True, mode='min')
         reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=2, min_lr=0.000001)
         model.fit(tweets, labels, batch_size=128, epochs=8, validation_split=0.1, shuffle=True, callbacks=[checkpoint, reduce_lr])
