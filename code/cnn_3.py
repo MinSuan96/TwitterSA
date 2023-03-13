@@ -139,7 +139,7 @@ if __name__ == '__main__':
         model.add(Activation('softmax'))
         # Change loss function to categorical_crossentropy
         model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-        filepath = "./models/{layers:02d}cnn-{kernel_size:02d}kernelSize-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
+        filepath = "./models/cnn-{epoch:02d}-{loss:0.3f}-{val_loss:0.3f}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor="loss", verbose=1, save_best_only=True, mode='min')
         reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=2, min_lr=0.000001)
         model.fit(tweets, labels, batch_size=128, epochs=8, validation_split=0.1, shuffle=True, callbacks=[checkpoint, reduce_lr])
