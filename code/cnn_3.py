@@ -161,7 +161,7 @@ if __name__ == '__main__':
     report_file = './reports/3-sentiments-report-{}cnn-{}kernel-{}mlength.csv'.format(layers, kernel_size, max_length)
     training = True
     train_and_test = True
-    if training:  
+    if training:
         for i in range(len(layers)):
             report_file = './reports/3-sentiments-report-{}cnn-{}kernel-{}mlength.csv'.format(layers[i], kernel_size[i], max_length)
             train(vocab, vocab_size, max_length, layers[i], filters, kernel_size[i], report_file, train_and_test)
