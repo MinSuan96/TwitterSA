@@ -14,9 +14,9 @@ from sklearn.metrics import classification_report
 
 FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-freqdist.pkl'
 BI_FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train.csv'
-TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test.csv'
-TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test.csv'
+TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train-fold0.csv'
+TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test-fold0.csv'
+TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test-fold0.csv'
 GLOVE_FILE = '../dataset/glove-seeds.txt'
 MODEL_FILE = './models/cnn-08-0.331-0.706.hdf5'
 dim = 200
