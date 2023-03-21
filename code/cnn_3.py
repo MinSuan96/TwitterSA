@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report
 
 # Performs classification using CNN.
 
-fold = 1
+fold = 4
 FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed-freqdist.pkl'.format(fold)
 BI_FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed-freqdist-bi.pkl'.format(fold)
 TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed.csv'.format(fold)
@@ -156,8 +156,8 @@ if __name__ == '__main__':
     batch_size = 128
     max_length = 40
     filters = 600
-    kernel_size = [2,3,4,5,6,7,8,9,10,2,3,4,5,6,7,8,9,10,2,3,4,5,6,7,8,9,10]
-    layers = [2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4]
+    kernel_size = [9,10]
+    layers = [4,4]
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
     report_file = './reports/3-sentiments-report-{}cnn-{}kernel-{}mlength.csv'.format(layers, kernel_size, max_length)
     training = True
