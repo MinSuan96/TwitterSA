@@ -12,11 +12,12 @@ from sklearn.metrics import classification_report
 
 # Performs classification using CNN.
 
-FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-freqdist.pkl'
-BI_FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-freqdist-bi.pkl'
-TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train-fold0.csv'
-TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test-fold0.csv'
-TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test-fold0.csv'
+fold = 1
+FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed-freqdist.pkl'.format(fold)
+BI_FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed-freqdist-bi.pkl'.format(fold)
+TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed.csv'.format(fold)
+TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test-fold{}.csv'.format(fold)
+TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test-fold{}.csv'.format(fold)
 GLOVE_FILE = '../dataset/glove-seeds.txt'
 MODEL_FILE = './models/cnn-08-0.331-0.706.hdf5'
 dim = 200
@@ -142,7 +143,7 @@ def test(layers, kernel_size, batch_size, max_length, report_file, model=None):
     predictions = model.predict(test_tweets, batch_size=batch_size, verbose=1)
     results = np.argmax(predictions, axis=1) - 1 # Convert back to original labels (-1, 0, 1)
     id_results = zip(map(str, range(len(test_tweets))), results)
-    utils.save_results_to_csv(id_results, './predictions/3-sentiments-predictions-{}cnn-{}kernel-{}mlength.csv'.format(layers, kernel_size, max_length))
+    utils.save_results_to_csv(id_results, './predictions/3-sentiments-predictions-{}cnn-{}kernel-{}mlength-fold{}.csv'.format(layers, kernel_size, max_length,fold))
     test_label = utils.file_number_to_list(TEST_LABEL_FILE)
     report = classification_report(test_label, results, target_names=['negative', 'neutral', 'positive'], output_dict=True)
     print(classification_report(test_label, results, target_names=['negative', 'neutral', 'positive'], output_dict=False))
@@ -153,17 +154,17 @@ if __name__ == '__main__':
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 128
-    max_length = 20
+    max_length = 40
     filters = 600
-    kernel_size = [3, 5]
-    layers = [9, 4]
+    kernel_size = [2,3,4,5,6,7,8,9,10,2,3,4,5,6,7,8,9,10,2,3,4,5,6,7,8,9,10]
+    layers = [2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4]
     vocab = utils.top_n_words(FREQ_DIST_FILE, vocab_size, shift=1)
     report_file = './reports/3-sentiments-report-{}cnn-{}kernel-{}mlength.csv'.format(layers, kernel_size, max_length)
     training = True
     train_and_test = True
     if training:
         for i in range(len(layers)):
-            report_file = './reports/3-sentiments-report-{}cnn-{}kernel-{}mlength.csv'.format(layers[i], kernel_size[i], max_length)
+            report_file = './reports/3-sentiments-report-{}cnn-{}kernel-{}mlength-fold{}.csv'.format(layers[i], kernel_size[i], max_length,fold)
             train(vocab, vocab_size, max_length, layers[i], filters, kernel_size[i], report_file, train_and_test)
     else:
         test(layers, kernel_size, batch_size, max_length, report_file)
