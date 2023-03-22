@@ -13,11 +13,11 @@ from sklearn.metrics import classification_report
 # Performs classification using CNN.
 
 fold = 4
-FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed-freqdist.pkl'.format(fold)
-BI_FREQ_DIST_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed-freqdist-bi.pkl'.format(fold)
-TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-train-fold{}-processed.csv'.format(fold)
-TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-processed-X-test-fold{}.csv'.format(fold)
-TEST_LABEL_FILE = '../twitter_data/3-sentiment-processed-y-test-fold{}.csv'.format(fold)
+FREQ_DIST_FILE = '../twitter_data/3-sentiment-train-combined-freqdist.pkl'.format(fold)
+BI_FREQ_DIST_FILE = '../twitter_data/3-sentiment-train-combined-freqdist-bi.pkl'.format(fold)
+TRAIN_PROCESSED_FILE = '../twitter_data/3-sentiment-train-combined.csv'.format(fold)
+TEST_PROCESSED_FILE = '../twitter_data/3-sentiment-X-test-combined.csv'.format(fold)
+TEST_LABEL_FILE = '../twitter_data/3-sentiment-y-test-combined.csv'.format(fold)
 GLOVE_FILE = '../dataset/glove-seeds.txt'
 MODEL_FILE = './models/cnn-08-0.331-0.706.hdf5'
 dim = 200
