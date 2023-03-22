@@ -154,7 +154,7 @@ if __name__ == '__main__':
     np.random.seed(1337)
     vocab_size = 90000
     batch_size = 128
-    max_length = 40
+    max_length = 100
     filters = 600
     kernel_size = [9,10]
     layers = [4,4]
