@@ -1,9 +1,5 @@
 # Twitter-Sentiment-Analysis
 
-[document link](https://docs.google.com/document/d/1E2ZUizHiy368AmD0TezSCoE2lEPxrajS8YF6r28Ezuc/edit?usp=sharing)
-
-[glove_seeds](https://nlp.stanford.edu/data/glove.twitter.27B.zip)
-
 ## Dataset Information
 
 We use and compare various different methods for sentiment analysis on tweets (a binary classification problem). The training dataset is expected to be a csv file of type `tweet_id,sentiment,tweet` where the `tweet_id` is a unique integer identifying the tweet, `sentiment` is either `1` (positive) or `0` (negative), and `tweet` is the tweet enclosed in `""`. Similarly, the test dataset is a csv file of type `tweet_id,tweet`. Please note that csv headers are not expected and should be removed from the training and test datasets.  
@@ -73,3 +69,5 @@ For all the methods that follow, change the values of `TRAIN_PROCESSED_FILE`, `T
 * `dataset/negative-words.txt`: List of negative words.
 * `dataset/glove-seeds.txt`: GloVe words vectors from StanfordNLP which match our dataset for seeding word embeddings.
 * `Plots.ipynb`: IPython notebook used to generate plots present in report.
+* [Group member's notes](https://docs.google.com/document/d/1E2ZUizHiy368AmD0TezSCoE2lEPxrajS8YF6r28Ezuc/edit?usp=sharing): A note created by the contributors of this project.
+* [glove_seeds](https://nlp.stanford.edu/data/glove.twitter.27B.zip): The source link of GloVe seeds
